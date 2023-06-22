@@ -5,7 +5,7 @@
 domain: everadaptive.tech
 layout:
 - go.kubebuilder.io/v4
-projectName: bs2
+projectName: betterstack-operator
 repo: everadaptive/betterstack-operator
 resources:
 - api:

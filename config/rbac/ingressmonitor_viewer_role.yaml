@@ -6,22 +6,22 @@ metadata:
     app.kubernetes.io/name: clusterrole
     app.kubernetes.io/instance: ingressmonitor-viewer-role
     app.kubernetes.io/component: rbac
-    app.kubernetes.io/created-by: bs2
-    app.kubernetes.io/part-of: bs2
+    app.kubernetes.io/created-by: betterstack-operator
+    app.kubernetes.io/part-of: betterstack-operator
     app.kubernetes.io/managed-by: kustomize
   name: ingressmonitor-viewer-role
 rules:
-- apiGroups:
-  - betterstack.everadaptive.tech
-  resources:
-  - ingressmonitors
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - betterstack.everadaptive.tech
-  resources:
-  - ingressmonitors/status
-  verbs:
-  - get
+  - apiGroups:
+      - betterstack.everadaptive.tech
+    resources:
+      - ingressmonitors
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - betterstack.everadaptive.tech
+    resources:
+      - ingressmonitors/status
+    verbs:
+      - get
