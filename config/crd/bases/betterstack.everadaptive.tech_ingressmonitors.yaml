@@ -120,7 +120,7 @@ spec:
                     type: string
                   url:
                     type: string
-                  verifySsl:
+                  verifySSL:
                     type: boolean
                 type: object
             type: object

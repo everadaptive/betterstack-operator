@@ -30,7 +30,7 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	betterstackv1beta1 "everadaptive/betterstack/api/v1beta1"
+	betterstackv1beta1 "everadaptive/betterstack-operator/api/v1beta1"
 	//+kubebuilder:scaffold:imports
 )
 

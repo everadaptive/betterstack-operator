@@ -44,7 +44,7 @@ type MonitorConfig struct {
 	MonitorGroupID      int                  `json:"monitorGroupId,omitempty"`
 	PronounceableName   string               `json:"pronounceableName,omitempty"`
 	RecoveryPeriod      int                  `json:"recoveryPeriod,omitempty"`
-	VerifySSL           bool                 `json:"verifySsl,omitempty"`
+	VerifySSL           bool                 `json:"verifySSL,omitempty"`
 	CheckFrequency      int                  `json:"checkFrequency,omitempty"`
 	ConfirmationPeriod  int                  `json:"confirmationPeriod,omitempty"`
 	HTTPMethod          string               `json:"httpMethod,omitempty"`

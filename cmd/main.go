@@ -31,8 +31,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	betterstackv1beta1 "everadaptive/betterstack/api/v1beta1"
-	"everadaptive/betterstack/internal/controller"
+	betterstackv1beta1 "everadaptive/betterstack-operator/api/v1beta1"
+	"everadaptive/betterstack-operator/internal/controller"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -62,7 +62,9 @@ func main() {
 	}
 
 	var betterUptimeAPIToken string
+	var groupPrefix string
 	flag.StringVar(&betterUptimeAPIToken, "betteruptime-api-token", "", "The API token for betteruptime.")
+	flag.StringVar(&groupPrefix, "group-prefix", "", "The prefix for the monitor group.")
 
 	opts.BindFlags(flag.CommandLine)
 	flag.Parse()
@@ -96,7 +98,10 @@ func main() {
 	if err = (&controller.IngressMonitorReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
-	}).SetupWithManager(mgr, betterUptimeAPIToken); err != nil {
+	}).SetupWithManager(mgr, controller.IngressMonitorReconcilerConfig{
+		APIToken:    betterUptimeAPIToken,
+		GroupPrefix: groupPrefix,
+	}); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "IngressMonitor")
 		os.Exit(1)
 	}

@@ -24,3 +24,4 @@ Dockerfile.cross
 *~
 
 .vscode/
+**/__debug_bin

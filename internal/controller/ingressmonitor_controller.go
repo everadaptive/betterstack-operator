@@ -26,11 +26,16 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
-	betterstackv1beta1 "everadaptive/betterstack/api/v1beta1"
+	betterstackv1beta1 "everadaptive/betterstack-operator/api/v1beta1"
 
 	bsapi "github.com/everadaptive/betteruptime-go/api"
 	netv1 "k8s.io/api/networking/v1"
 )
+
+type IngressMonitorReconcilerConfig struct {
+	APIToken    string
+	GroupPrefix string
+}
 
 // IngressMonitorReconciler reconciles a IngressMonitor object
 type IngressMonitorReconciler struct {
@@ -38,6 +43,7 @@ type IngressMonitorReconciler struct {
 	Scheme *runtime.Scheme
 
 	bsClient *bsapi.Client
+	config   IngressMonitorReconcilerConfig
 }
 
 //+kubebuilder:rbac:groups=betterstack.everadaptive.tech,resources=ingressmonitors,verbs=get;list;watch;create;update;patch;delete
@@ -76,7 +82,7 @@ func (r *IngressMonitorReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 
 	myFinalizerName := "ingressmonitor.betterstack.everadaptive.tech"
 	if ingressMonitor.ObjectMeta.DeletionTimestamp.IsZero() {
-		monitorGroupName := fmt.Sprintf("🚀 %s/%s", ingress.Namespace, ingress.Name)
+		monitorGroupName := fmt.Sprintf("%s 🚀 %s/%s", r.config.GroupPrefix, ingress.Namespace, ingress.Name)
 		if ingressMonitor.Status.MonitorGroup.ID != "" {
 			resp, err := bsapi.MonitorGroupUpdate(ctx, r.bsClient, ingressMonitor.Status.MonitorGroup.ID, bsapi.MonitorGroup{
 				Name: monitorGroupName,
@@ -113,34 +119,30 @@ func (r *IngressMonitorReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 
 			monitor := bsapi.Monitor(monitorConfig)
 
-			monitors, err := bsapi.MonitorGet(ctx, r.bsClient, fmt.Sprintf("pronounceable_name=%s", monitorName))
-			if err != nil {
-				log.Log.Error(err, "Error fetching monitors from BetterStack", "name", monitorName)
+			var currentStatus betterstackv1beta1.MonitorStatus
+			for _, status := range ingressMonitor.Status.Monitors {
+				if status.Name == rule.Host {
+					currentStatus = status
+					break
+				}
 			}
 
-			if len(monitors.Data) > 1 {
-				log.Log.Error(nil, "Too many monitors retrieved from BetterStack", "name", monitorName)
-
-			} else if len(monitors.Data) == 1 {
-				resp, err := bsapi.MonitorUpdate(ctx, r.bsClient, monitors.Data[0].ID, monitor)
+			var resp bsapi.MonitorHTTPResponse
+			if currentStatus.ID != "" {
+				resp, err = bsapi.MonitorUpdate(ctx, r.bsClient, currentStatus.ID, monitor)
 
 				if err != nil {
 					log.Log.Error(err, "Error updating Better Stack monitor", "name", monitorName)
 				}
-
-				status = append(status, betterstackv1beta1.MonitorStatus{
-					ID:          resp.Data.ID,
-					Name:        resp.Data.Attributes.PronounceableName,
-					MonitorType: resp.Data.Attributes.MonitorType,
-					Paused:      resp.Data.Attributes.Paused,
-				})
-			} else if len(monitors.Data) == 0 {
-				resp, err := bsapi.MonitorCreate(ctx, r.bsClient, monitor)
+			} else {
+				resp, err = bsapi.MonitorCreate(ctx, r.bsClient, monitor)
 
 				if err != nil {
 					log.Log.Error(err, "Error creating Better Stack monitor", "name", monitorName)
 				}
+			}
 
+			if resp.Data.ID != "" {
 				status = append(status, betterstackv1beta1.MonitorStatus{
 					ID:          resp.Data.ID,
 					Name:        resp.Data.Attributes.PronounceableName,
@@ -189,8 +191,10 @@ func (r *IngressMonitorReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *IngressMonitorReconciler) SetupWithManager(mgr ctrl.Manager, token string) error {
-	client, err := bsapi.NewClient(token)
+func (r *IngressMonitorReconciler) SetupWithManager(mgr ctrl.Manager, cfg IngressMonitorReconcilerConfig) error {
+	r.config = cfg
+
+	client, err := bsapi.NewClient(r.config.APIToken)
 	if err != nil {
 		return err
 	}

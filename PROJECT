@@ -6,7 +6,7 @@ domain: everadaptive.tech
 layout:
 - go.kubebuilder.io/v4
 projectName: bs2
-repo: everadaptive/betterstack
+repo: everadaptive/betterstack-operator
 resources:
 - api:
     crdVersion: v1
@@ -15,6 +15,6 @@ resources:
   domain: everadaptive.tech
   group: betterstack
   kind: IngressMonitor
-  path: everadaptive/betterstack/api/v1beta1
+  path: everadaptive/betterstack-operator/api/v1beta1
   version: v1beta1
 version: "3"

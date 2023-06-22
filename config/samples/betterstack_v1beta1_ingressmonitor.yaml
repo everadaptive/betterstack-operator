@@ -12,3 +12,5 @@ spec:
   ingressName: ingress
   monitorConfig:
     monitorType: "status"
+    verifySSL: true
+    sslExpiration: 7
