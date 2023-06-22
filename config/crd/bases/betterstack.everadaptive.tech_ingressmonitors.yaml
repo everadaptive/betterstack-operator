@@ -1,0 +1,166 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.12.0
+  name: ingressmonitors.betterstack.everadaptive.tech
+spec:
+  group: betterstack.everadaptive.tech
+  names:
+    kind: IngressMonitor
+    listKind: IngressMonitorList
+    plural: ingressmonitors
+    singular: ingressmonitor
+  scope: Namespaced
+  versions:
+  - name: v1beta1
+    schema:
+      openAPIV3Schema:
+        description: IngressMonitor is the Schema for the ingressmonitors API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: IngressMonitorSpec defines the desired state of IngressMonitor
+            properties:
+              ingressName:
+                description: Foo is an example field of IngressMonitor. Edit ingressmonitor_types.go
+                  to remove/update
+                type: string
+              monitorConfig:
+                properties:
+                  authPassword:
+                    type: string
+                  authUsername:
+                    type: string
+                  call:
+                    type: boolean
+                  checkFrequency:
+                    type: integer
+                  confirmationPeriod:
+                    type: integer
+                  createdAt:
+                    type: string
+                  domainExpiration:
+                    type: integer
+                  email:
+                    type: boolean
+                  expectedStatus_codes:
+                    items:
+                      type: integer
+                    type: array
+                  followRedirects:
+                    type: boolean
+                  httpMethod:
+                    type: string
+                  lastCheckedAt:
+                    type: string
+                  maintenanceFrom:
+                    type: string
+                  maintenanceTimezone:
+                    type: string
+                  maintenanceTo:
+                    type: string
+                  monitorGroupId:
+                    type: integer
+                  monitorType:
+                    type: string
+                  paused:
+                    type: boolean
+                  pausedAt:
+                    type: string
+                  policyId:
+                    type: string
+                  port:
+                    type: string
+                  pronounceableName:
+                    type: string
+                  push:
+                    type: boolean
+                  recoveryPeriod:
+                    type: integer
+                  regions:
+                    items:
+                      type: string
+                    type: array
+                  rememberCookies:
+                    type: boolean
+                  requestBody:
+                    type: string
+                  requestHeaders:
+                    items:
+                      additionalProperties:
+                        type: string
+                      type: object
+                    type: array
+                  requestTimeout:
+                    type: integer
+                  requiredKeyword:
+                    type: string
+                  sms:
+                    type: boolean
+                  sslExpiration:
+                    type: integer
+                  status:
+                    type: string
+                  teamWait:
+                    type: integer
+                  updatedAt:
+                    type: string
+                  url:
+                    type: string
+                  verifySsl:
+                    type: boolean
+                type: object
+            type: object
+          status:
+            description: IngressMonitorStatus defines the observed state of IngressMonitor
+            properties:
+              monitorGroup:
+                properties:
+                  id:
+                    type: string
+                  pronounceableName:
+                    type: string
+                required:
+                - id
+                - pronounceableName
+                type: object
+              monitors:
+                items:
+                  properties:
+                    id:
+                      type: string
+                    monitorType:
+                      type: string
+                    paused:
+                      type: boolean
+                    pronounceableName:
+                      type: string
+                  required:
+                  - id
+                  - monitorType
+                  - paused
+                  - pronounceableName
+                  type: object
+                type: array
+            required:
+            - monitorGroup
+            - monitors
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

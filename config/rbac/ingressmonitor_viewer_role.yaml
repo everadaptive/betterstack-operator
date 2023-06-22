@@ -1,0 +1,27 @@
+# permissions for end users to view ingressmonitors.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: ingressmonitor-viewer-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: bs2
+    app.kubernetes.io/part-of: bs2
+    app.kubernetes.io/managed-by: kustomize
+  name: ingressmonitor-viewer-role
+rules:
+- apiGroups:
+  - betterstack.everadaptive.tech
+  resources:
+  - ingressmonitors
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - betterstack.everadaptive.tech
+  resources:
+  - ingressmonitors/status
+  verbs:
+  - get

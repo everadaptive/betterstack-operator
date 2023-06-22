@@ -1,0 +1,31 @@
+# permissions for end users to edit ingressmonitors.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: ingressmonitor-editor-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: bs2
+    app.kubernetes.io/part-of: bs2
+    app.kubernetes.io/managed-by: kustomize
+  name: ingressmonitor-editor-role
+rules:
+- apiGroups:
+  - betterstack.everadaptive.tech
+  resources:
+  - ingressmonitors
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - betterstack.everadaptive.tech
+  resources:
+  - ingressmonitors/status
+  verbs:
+  - get

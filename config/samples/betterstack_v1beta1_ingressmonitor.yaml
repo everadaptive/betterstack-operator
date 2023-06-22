@@ -1,0 +1,14 @@
+apiVersion: betterstack.everadaptive.tech/v1beta1
+kind: IngressMonitor
+metadata:
+  labels:
+    app.kubernetes.io/name: ingressmonitor
+    app.kubernetes.io/instance: ingressmonitor-sample
+    app.kubernetes.io/part-of: betterstack-operator
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: betterstack-operator
+  name: ingressmonitor-sample
+spec:
+  ingressName: ingress
+  monitorConfig:
+    monitorType: "status"
